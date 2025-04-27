@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxePark - Premium Parking Solutions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Animated Background Elements -->
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+        
+        <!-- Main Card -->
+        <div class="card animate__animated animate__fadeIn">
+            <div class="card-header">
+                <div class="logo">
+                    <i class="fas fa-parking"></i>
+                    <span>LuxePark</span>
+                </div>
+                <div class="progress-steps">
+                    <div class="step active"><span>1</span></div>
+                    <div class="step"><span>2</span></div>
+                    <div class="step"><span>3</span></div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <!-- Payment Section -->
+                <div id="paymentSection" class="section active">
+                    <h2 class="section-title">Confirm Your Parking</h2>
+                    <p class="section-subtitle">Secure your spot with our premium service</p>
+                    
+                    <div class="payment-details">
+                        <div class="detail-card">
+                            <div class="detail-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Vehicle Number</span>
+                                <input type="text" id="vehicleNumberInput" class="detail-input" placeholder="e.g., ABC 1234" maxlength="10">
+                                <span id="vehicleNumberDisplay" class="detail-value" style="display: none;"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <div class="detail-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Duration (hours)</span>
+                                <input type="number" id="durationInput" class="detail-input" placeholder="e.g., 2" min="1" max="24">
+                                <span id="durationDisplay" class="detail-value" style="display: none;"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-card total">
+                            <div class="detail-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Total Amount</span>
+                                <span id="totalAmountDisplay" class="detail-value">$12.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="validationMessage" class="validation-message" style="display: none;"></div>
+                    
+                    <button id="confirmBtn" class="primary-btn animate__animated animate__pulse animate__infinite">
+
+                        <span class="btn-text">Confirm Payment</span>
+                        <span class="btn-icon">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </button>
+                    
+                    <div class="security-notice">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure 256-bit SSL encrypted payment</span>
+                    </div>
+                </div>
+                
+                <!-- Processing Section -->
+                <div id="processingSection" class="section" style="display: none;">
+                    <div class="processing-content">
+                        <div class="loader animate__animated animate__fadeIn">
+                            <div class="loader-circle"></div>
+                            <div class="loader-checkmark"></div>
+                        </div>
+                        <h3 class="processing-title">Processing Your Payment</h3>
+                        <p class="processing-text">We're securing your parking spot...</p>
+                        
+                        <div class="progress-container">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div id="resultsSection" class="section" style="display: none;">
+                    <div class="success-animation animate__animated animate__fadeIn">
+                        <div class="checkmark-circle">
+                            <div class="checkmark"></div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="success-title">Payment Confirmed!</h3>
+                    <p class="success-subtitle">Your parking has been successfully reserved</p>
+                    
+                    <div class="spot-assignment">
+                        <div class="spot-card">
+                            <div class="spot-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="spot-info">
+                                <span class="spot-label">Your Assigned Spot</span>
+                                <span id="bestSpot" class="spot-number">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="parking-map-container">
+                        <div class="map-header">
+                            <h4>Live Parking Map</h4>
+                            <div class="map-legend">
+                                <div class="legend-item">
+                                    <span class="legend-color available"></span>
+                                    <span>Available</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color assigned"></span>
+                                    <span>Yours</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color occupied"></span>
+                                    <span>Taken</span>
+                                </div>
+                            </div>
+                        </div>
+                        <img id="processedImage" src="" alt="Parking Map" class="parking-map">
+                    </div>
+                    
+                    <div class="additional-info">
+                        <div class="info-card">
+                            <i class="fas fa-clock"></i>
+                            <span>Valid until: <strong id="expiryTime">-</strong></span>
+                        </div>
+                        
+                    </div>
+                    
+                    <button class="primary-btn outline">
+                        <span class="btn-text">Save to Mobile Wallet</span>
+                        <span class="btn-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+                    <a href="#"><i class="fas fa-shield-alt"></i> Security</a>
+                    <a href="#"><i class="fas fa-phone"></i> Contact</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notification Toast -->
+        <div id="notificationToast" class="toast">
+            <div class="toast-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="toast-content">
+                <p class="toast-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            const paymentSection = document.getElementById('paymentSection');
+            const processingSection = document.getElementById('processingSection');
+            const vehicleNumberInput = document.getElementById('vehicleNumberInput').value.trim();
+            const durationInput = parseInt(document.getElementById('durationInput').value);
+            const validationMessage = document.getElementById('validationMessage');
+
+            // Validate inputs
+            if (!vehicleNumberInput) {
+                validationMessage.textContent = 'Please enter a valid vehicle number.';
+                validationMessage.style.display = 'block';
+                return;
+            }
+            if (!durationInput || durationInput < 1 || durationInput > 24) {
+                validationMessage.textContent = 'Please enter a duration between 1 and 24 hours.';
+                validationMessage.style.display = 'block';
+                return;
+            }
+
+            // Clear validation message
+            validationMessage.style.display = 'none';
+
+            // Update display values
+            document.getElementById('vehicleNumberDisplay').textContent = vehicleNumberInput;
+            document.getElementById('vehicleNumberDisplay').style.display = 'block';
+            document.getElementById('vehicleNumberInput').style.display = 'none';
+            document.getElementById('durationDisplay').textContent = `${durationInput} hours`;
+            document.getElementById('durationDisplay').style.display = 'block';
+            document.getElementById('durationInput').style.display = 'none';
+
+            // Calculate total amount (assuming $6 per hour for simplicity)
+            const totalAmount = (durationInput * 6).toFixed(2);
+            document.getElementById('totalAmountDisplay').textContent = `$${totalAmount}`;
+
+            // Animate payment section out
+            paymentSection.classList.add('animate__animated', 'animate__fadeOut');
+            
+            setTimeout(() => {
+                paymentSection.style.display = 'none';
+                processingSection.style.display = 'block';
+                processingSection.classList.add('animate__animated', 'animate__fadeIn');
+                
+                // Update progress steps
+                document.querySelectorAll('.progress-steps .step')[1].classList.add('active');
+                
+                // Simulate processing animation
+                const progressBar = document.querySelector('.progress-bar');
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        processPayment(vehicleNumberInput, durationInput);
+                    } else {
+                        width += 2;
+                        progressBar.style.width = width + '%';
+                    }
+                }, 50);
+            }, 500);
+        });
+        
+        function processPayment(vehicleNumber, duration) {
+            fetch('/detect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    vehicleNumber: vehicleNumber,
+                    duration: duration
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const processingSection = document.getElementById('processingSection');
+                const resultsSection = document.getElementById('resultsSection');
+                
+                if (data.status === 'success') {
+                    // Complete loader animation
+                    document.querySelector('.loader-circle').style.display = 'none';
+                    document.querySelector('.loader-checkmark').classList.add('animate');
+                    
+                    setTimeout(() => {
+                        // Animate processing section out
+                        processingSection.classList.add('animate__animated', 'animate__fadeOut');
+                        
+                        setTimeout(() => {
+                            processingSection.style.display = 'none';
+                            resultsSection.style.display = 'block';
+                            resultsSection.classList.add('animate__animated', 'animate__fadeIn');
+                            
+                            // Update progress steps
+                            document.querySelectorAll('.progress-steps .step')[2].classList.add('active');
+                            
+                            // Display results
+                            document.getElementById('processedImage').src = data.processed_image + '?' + new Date().getTime();
+                            document.getElementById('bestSpot').textContent = data.best_spot ? `Spot #${data.best_spot}` : 'Not assigned';
+                            
+                            // Set expiry time (2 hours from now)
+                            const now = new Date();
+                            now.setHours(now.getHours() + duration);
+                            document.getElementById('expiryTime').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            
+                            // Show success notification
+                            showNotification('Parking spot assigned successfully!');
+                        }, 500);
+                    }, 1000);
+                } else {
+                    showNotification(data.message || 'Payment processing failed', 'error');
+                }
+            })
+            .catch(err => {
+                showNotification('Connection error. Please try again.', 'error');
+            });
+        }
+        
+        function showNotification(message, type = 'success') {
+            const toast = document.getElementById('notificationToast');
+            const toastMessage = document.querySelector('.toast-message');
+            
+            toastMessage.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
